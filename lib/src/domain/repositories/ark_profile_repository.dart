@@ -1,5 +1,6 @@
 import 'package:ark_module_profile_prakerja/src/core/failures.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_course_entity.dart';
+import 'package:ark_module_profile_prakerja/src/domain/entities/my_nilai_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -11,4 +12,6 @@ abstract class ArkProfileRepository {
       String token, int perPage);
 
   Future<Either<Failure, MySertifikatEntity>> getMySertifikat(int userId);
+
+  Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(String token);
 }

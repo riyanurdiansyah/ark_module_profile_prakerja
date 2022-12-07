@@ -5,6 +5,7 @@ import 'package:ark_module_profile_prakerja/src/core/failures.dart';
 import 'package:ark_module_profile_prakerja/src/data/datasources/ark_profile_remote_datasource_impl.dart';
 import 'package:ark_module_profile_prakerja/src/data/repositories/ark_profile_repository_impl.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_course_entity.dart';
+import 'package:ark_module_profile_prakerja/src/domain/entities/my_nilai_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/usecases/ark_profile_usecase.dart';
@@ -24,6 +25,12 @@ class ArkProfilePrakerjaController extends GetxController {
 
   final Rx<bool> _isLoadingSertifikat = false.obs;
   Rx<bool> get isLoadingSertifikat => _isLoadingSertifikat;
+
+  final Rx<bool> _isLoadingNilai = false.obs;
+  Rx<bool> get isLoadingNilai => _isLoadingNilai;
+
+  final Rx<bool> _isHaveErrorNilai = false.obs;
+  Rx<bool> get isHaveErrorNilai => _isHaveErrorNilai;
 
   final Rx<bool> _isHaveErrorSertifikat = false.obs;
   Rx<bool> get isHaveErrorSertifikat => _isHaveErrorSertifikat;
@@ -53,12 +60,16 @@ class ArkProfilePrakerjaController extends GetxController {
   final RxList<MyCourseEntity> _myCourses = <MyCourseEntity>[].obs;
   RxList<MyCourseEntity> get myCourses => _myCourses;
 
+  final RxList<MyNilaiEntity> _myNilais = <MyNilaiEntity>[].obs;
+  RxList<MyNilaiEntity> get myNilais => _myNilais;
+
   @override
   void onInit() async {
     await _setup();
     await fetchProfile();
     await fetchMyCourse();
     await fetchMySertifikat();
+    await fetchMyNilai();
     super.onInit();
   }
 
@@ -81,6 +92,10 @@ class ArkProfilePrakerjaController extends GetxController {
     _isLoadingSertifikat.value = val;
   }
 
+  Future _changeLoadingNilai(bool val) async {
+    _isLoadingNilai.value = val;
+  }
+
   Future _changeHaveErrorSertifikat(bool val) async {
     _isHaveErrorSertifikat.value = val;
   }
@@ -98,6 +113,18 @@ class ArkProfilePrakerjaController extends GetxController {
       ExceptionHandle.execute(fail);
     }, (data) async {
       _myCourses.value = data;
+    });
+  }
+
+  Future fetchMyNilai() async {
+    _changeLoadingNilai(true);
+    final response = await _usecase.getMyNilai(tokenPrakerjaMigrate);
+    response.fold((Failure fail) async {
+      ExceptionHandle.execute(fail);
+      await _changeLoadingNilai(false);
+    }, (data) async {
+      _myNilais.value = data;
+      await _changeLoadingNilai(false);
     });
   }
 

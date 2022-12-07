@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:ark_module_profile_prakerja/src/data/datasources/ark_profile_remote_datasource.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_course_dto.dart';
+import 'package:ark_module_profile_prakerja/src/data/dto/my_nilai_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_sertifikat_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/profile_dto.dart';
 import 'package:ark_module_profile_prakerja/utils/app_url.dart';
@@ -80,6 +81,30 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       code,
       response,
       'Error GET MY SERTIFIKAT... failed connect to server',
+    );
+  }
+
+  @override
+  Future<List<MyNilaiDTO>> getMyNilai(String token) async {
+    await dioInterceptor(dio, token);
+
+    final response = await dio.get(
+      apiProfileUrl,
+      queryParameters: {
+        "tab": "result_quizes",
+      },
+      options: dioOptions(),
+    );
+    log("RESPONSE MY NILAI : ${response.data}");
+    final data = json.encode(response.data);
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return myNilaiFromJsonToList(data);
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error GET MY NILAI... failed connect to server',
     );
   }
 }

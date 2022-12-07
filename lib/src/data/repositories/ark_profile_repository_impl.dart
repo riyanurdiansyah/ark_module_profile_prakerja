@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:ark_module_profile_prakerja/src/data/datasources/ark_profile_remote_datasource.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_course_entity.dart';
+import 'package:ark_module_profile_prakerja/src/domain/entities/my_nilai_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:ark_module_profile_prakerja/src/core/failures.dart';
@@ -45,6 +46,17 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET MY SERTIFIKAT : ${e.toString()}");
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(String token) async {
+    try {
+      final response = await dataSource.getMyNilai(token);
+      return Right(response);
+    } catch (e) {
+      log("ERROR PROFILE REPO GET MY NILAI : ${e.toString()}");
       return Left(ExceptionHandleResponse().execute(e));
     }
   }
