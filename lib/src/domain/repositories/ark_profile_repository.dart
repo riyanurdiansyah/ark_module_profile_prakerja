@@ -17,4 +17,7 @@ abstract class ArkProfileRepository {
   Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(String token);
 
   Future<Either<Failure, List<MyAktifitasEntity>>> getMyAktifitas(String token);
+
+  Future<Either<Failure, bool>> saveGenerateSertifikat(
+      String token, String courseId);
 }

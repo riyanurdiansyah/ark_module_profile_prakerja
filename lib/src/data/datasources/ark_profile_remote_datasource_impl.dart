@@ -74,6 +74,7 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       options: dioOptions(),
     );
     log("RESPONSE MY SERTIFIKAT : ${response.data}");
+    log("RESPONSE MY SERTIFIKAT : ${"$apiSertifikatUrl/$userId"}");
     int code = response.statusCode ?? 500;
     if (code == 200) {
       return MySertifikatDTO.fromJson(response.data);
@@ -130,6 +131,25 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       code,
       response,
       'Error GET MY AKTIFITAS... failed connect to server',
+    );
+  }
+
+  @override
+  Future<bool> saveGenerateSertifikat(String token, String courseId) async {
+    await dioInterceptor(dio, token);
+    final response = await dio.get(
+      "$saveGenerateSertifUrl/$courseId",
+      options: dioOptions(),
+    );
+    log("RESPONSE MY SAVE GEN : ${response.data}");
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return response.data['success'] ?? true;
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error GET MY SAVE GENERATE SERTIF... failed connect to server',
     );
   }
 }

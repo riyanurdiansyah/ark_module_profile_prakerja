@@ -1,10 +1,11 @@
 import 'dart:developer';
-
 import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/ark_hero_image_page.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_empty_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_error_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_sertifikat_loading_widget.dart';
+import 'package:ark_module_profile_prakerja/utils/app_bottomsheet.dart';
+import 'package:ark_module_profile_prakerja/utils/app_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,26 +19,27 @@ class ArkSertifikatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {
-        await _pC.fetchMySertifikat();
-      },
-      child: Obx(() {
-        if (_pC.isLoadingSertifikat.value) {
-          return const ArkSertifikatLoadingWidget();
-        }
+    return Container(
+      color: Colors.white,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await _pC.fetchMySertifikat();
+        },
+        child: Obx(() {
+          if (_pC.isLoadingSertifikat.value) {
+            return const ArkSertifikatLoadingWidget();
+          }
 
-        if (_pC.isHaveErrorSertifikat.value) {
-          return ArkErrorWidget(onRefresh: () => _pC.fetchMySertifikat());
-        }
+          if (_pC.isHaveErrorSertifikat.value) {
+            return ArkErrorWidget(onRefresh: () => _pC.fetchMySertifikat());
+          }
 
-        if (_pC.mySertifikat.value.certificates.isEmpty) {
-          return ArkEmptyWidget(onTap: () {
-            log("");
-          });
-        }
-        return SingleChildScrollView(
-          child: Column(
+          if (_pC.mySertifikat.value.certificates.isEmpty) {
+            return ArkEmptyWidget(onTap: () {
+              log("");
+            });
+          }
+          return ListView(
             children: [
               Card(
                 shape: RoundedRectangleBorder(
@@ -65,7 +67,8 @@ class ArkSertifikatWidget extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () =>
+                                AppBottomSheet.sheetInformasiPrakerja(context),
                             child: const Text(
                               'lihat lebih detail',
                               style: TextStyle(
@@ -120,59 +123,78 @@ class ArkSertifikatWidget extends StatelessWidget {
                               color: Color.fromRGBO(28, 29, 32, 0.8)),
                           textAlign: TextAlign.center,
                         ),
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) {
-                            return ArkHeroImagePage(
-                              url: _pC
-                                  .mySertifikat.value.certificates[i].certUrl,
-                              tag: "imageHero $i",
-                            );
-                          }),
-                        ),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 280,
-                          child: Hero(
-                            tag: "imageHero $i",
-                            child: CachedNetworkImage(
-                              imageUrl: _pC
-                                  .mySertifikat.value.certificates[i].certUrl,
-                              errorWidget: (_, __, ___) => Stack(
-                                children: [
-                                  Image.asset(
-                                    'assets/images/sertif-blur.png',
+                      Obx(() {
+                        if (_pC.listStatusGenerate[i]) {
+                          return SizedBox(
+                            height: 280,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                SizedBox(
+                                  width: 28,
+                                  height: 28,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 4,
                                   ),
-                                  Center(
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 60),
-                                        Image.asset(
-                                            'assets/images/logo-no-wifi.png',
-                                            height: 55,
-                                            width: 55),
-                                        const SizedBox(height: 15),
-                                        const Text(
-                                          'Sertifikat gagal dimuat.\nMohon periksa koneksi internet anda.',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontFamily: 'SourceSansPro',
-                                            height: 1.6,
-                                            color: Color.fromRGBO(
-                                                198, 201, 207, 1),
-                                          ),
-                                        ),
-                                        const SizedBox(height: 15),
-                                      ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return GestureDetector(
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) {
+                              return ArkHeroImagePage(
+                                url: _pC
+                                    .mySertifikat.value.certificates[i].certUrl,
+                                tag: "imageHero $i",
+                              );
+                            }),
+                          ),
+                          child: SizedBox(
+                            width: Get.width,
+                            height: 280,
+                            child: Hero(
+                              tag: "imageHero $i",
+                              child: CachedNetworkImage(
+                                imageUrl: _pC
+                                    .mySertifikat.value.certificates[i].certUrl,
+                                errorWidget: (_, __, ___) => Stack(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/sertif-blur.png',
                                     ),
-                                  )
-                                ],
+                                    Center(
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 60),
+                                          Image.asset(
+                                              'assets/images/logo-no-wifi.png',
+                                              height: 55,
+                                              width: 55),
+                                          const SizedBox(height: 15),
+                                          const Text(
+                                            'Sertifikat gagal dimuat.\nMohon periksa koneksi internet anda.',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                              fontFamily: 'SourceSansPro',
+                                              height: 1.6,
+                                              color: Color.fromRGBO(
+                                                  198, 201, 207, 1),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 15),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                       Row(
                         children: [
                           Expanded(
@@ -182,7 +204,11 @@ class ArkSertifikatWidget extends StatelessWidget {
                                           .remainingGen ==
                                       0
                                   ? null
-                                  : () {},
+                                  : () =>
+                                      AppDialog.dialogPerbaruiSertif(() async {
+                                        Get.back();
+                                        await _pC.saveGenerateSertifikat(i);
+                                      }),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -225,7 +251,9 @@ class ArkSertifikatWidget extends StatelessWidget {
                           Expanded(
                             flex: 1,
                             child: OutlinedButton(
-                              onPressed: () async {},
+                              onPressed: () async => await _pC.checkPermission(
+                                  _pC.mySertifikat.value.certificates[i]
+                                      .certUrl),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -258,9 +286,9 @@ class ArkSertifikatWidget extends StatelessWidget {
                 ),
               ),
             ],
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 }

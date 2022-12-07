@@ -28,4 +28,8 @@ class ArkProfileUseCase {
   Future<Either<Failure, List<MyAktifitasEntity>>> getMyAktifitas(
           String token) async =>
       await _repository.getMyAktifitas(token);
+
+  Future<Either<Failure, bool>> saveGenerateSertifikat(
+          String token, String courseId) async =>
+      await _repository.saveGenerateSertifikat(token, courseId);
 }

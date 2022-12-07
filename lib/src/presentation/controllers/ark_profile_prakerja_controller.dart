@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:ark_module_profile_prakerja/src/core/exception_handling.dart';
 import 'package:ark_module_profile_prakerja/src/core/failures.dart';
@@ -11,8 +14,15 @@ import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_en
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/usecases/ark_profile_usecase.dart';
 import 'package:ark_module_profile_prakerja/utils/app_constanta.dart';
+import 'package:ark_module_profile_prakerja/utils/app_dialog.dart';
 import 'package:ark_module_profile_prakerja/utils/app_empty_entity.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ArkProfilePrakerjaController extends GetxController {
@@ -54,6 +64,9 @@ class ArkProfilePrakerjaController extends GetxController {
   final Rx<int> _userId = 0.obs;
   Rx<int> get userId => _userId;
 
+  final Rx<String> _version = "".obs;
+  Rx<String> get version => _version;
+
   late ArkProfileRemoteDataSourceImpl _dataSource;
   late ArkProfileRepositoryImpl _repository;
   late ArkProfileUseCase _usecase;
@@ -73,8 +86,21 @@ class ArkProfilePrakerjaController extends GetxController {
   final RxList<MyAktifitasEntity> _myAktifitas = <MyAktifitasEntity>[].obs;
   RxList<MyAktifitasEntity> get myAktifitas => _myAktifitas;
 
+  final RxList<bool> _listStatusGenerate = <bool>[].obs;
+  RxList<bool> get listStatusGenerate => _listStatusGenerate;
+
+  final ReceivePort _port = ReceivePort();
+
+  final _googleSignIn = GoogleSignIn();
+  final _googleSignInIos = GoogleSignIn(
+    hostedDomain: "https://apps.arkademi.com",
+    clientId:
+        '265001851813-uvseu68037o8lpo126p679sbm3sesns6.apps.googleusercontent.com',
+  );
   @override
   void onInit() async {
+    _getVersion();
+    _downloadListener();
     await _setup();
     await fetchProfile();
     await fetchMyCourse();
@@ -82,6 +108,18 @@ class ArkProfilePrakerjaController extends GetxController {
     await fetchMyNilai();
     await fetchMyAktifitas();
     super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _port.close();
+    IsolateNameServer.removePortNameMapping('downloader_cert');
+    super.onClose();
+  }
+
+  Future<void> _getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    _version.value = packageInfo.version;
   }
 
   Future _setup() async {
@@ -130,6 +168,21 @@ class ArkProfilePrakerjaController extends GetxController {
     });
   }
 
+  Future saveGenerateSertifikat(int index) async {
+    _listStatusGenerate[index] = true;
+    final response = await _usecase.saveGenerateSertifikat(_tokenPrakerja.value,
+        _mySertifikat.value.certificates[index].id.toString());
+    response.fold((Failure fail) => ExceptionHandle.execute(fail),
+        (data) async {
+      if (data) {
+        await generateSertifikat(
+            _mySertifikat.value.certificates[index].id.toString());
+      }
+    });
+  }
+
+  Future generateSertifikat(String courseId) async {}
+
   Future fetchMyCourse() async {
     final response = await _usecase.getMyCourse(tokenPrakerjaMigrate, 100);
     response.fold((Failure fail) async {
@@ -155,14 +208,15 @@ class ArkProfilePrakerjaController extends GetxController {
 
   Future fetchMySertifikat() async {
     _changeLoadingSertifikat(true);
+    log("ID : ${_userId.value}");
     final response = await _usecase.getMySertifikat(_userId.value);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
-      log("KESINI");
       await _changeHaveErrorSertifikat(true);
       await _changeLoadingSertifikat(false);
     }, (data) async {
       _mySertifikat.value = data;
+      _listStatusGenerate.value = List.filled(data.certificates.length, false);
       await _changeHaveErrorSertifikat(false);
       await _changeLoadingSertifikat(false);
     });
@@ -173,7 +227,6 @@ class ArkProfilePrakerjaController extends GetxController {
     final response = await _usecase.getMyAktifitas(tokenPrakerjaMigrate);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
-      log("KESINI");
       await _changeHaveErrorAktifitas(true);
       await _changeLoadingAktifitas(false);
     }, (data) async {
@@ -181,5 +234,98 @@ class ArkProfilePrakerjaController extends GetxController {
       await _changeHaveErrorAktifitas(false);
       await _changeLoadingAktifitas(false);
     });
+  }
+
+  Future<String?> findLocalPath() async {
+    String? externalStorageDirPath;
+    if (GetPlatform.isAndroid) {
+      final directory = await getExternalStorageDirectory();
+      externalStorageDirPath = directory?.path;
+    } else if (GetPlatform.isIOS) {
+      externalStorageDirPath = (await getApplicationDocumentsDirectory()).path;
+    }
+    return externalStorageDirPath;
+  }
+
+  Future _downloadListener() async {
+    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_cert');
+    _port.listen((dynamic data) {
+      DownloadTaskStatus status = data[1];
+      log("PROGRESS DOWNLOAD : ${data[2]}");
+      if (status == DownloadTaskStatus.complete && data[2] == 100) {
+        AppDialog.dialogDownloadSertif();
+      }
+    });
+
+    FlutterDownloader.registerCallback(_downloadCallback);
+  }
+
+  static void _downloadCallback(
+    String id,
+    DownloadTaskStatus status,
+    int progress,
+  ) {
+    final SendPort? send =
+        IsolateNameServer.lookupPortByName('downloader_cert');
+    send!.send([id, status, progress]);
+  }
+
+  Future checkPermission(String url) async {
+    final status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+
+    if (await Permission.speech.isPermanentlyDenied) {
+      openAppSettings();
+    }
+
+    if (status.isGranted) {
+      downloadSertifikat(url);
+    }
+  }
+
+  Future downloadSertifikat(String url) async {
+    final storageDir = await findLocalPath();
+    final savedDir = Directory(storageDir!);
+
+    final hasExisted = await savedDir.exists();
+    if (!hasExisted) {
+      savedDir.create();
+    }
+
+    await FlutterDownloader.enqueue(
+      url: url,
+      savedDir: storageDir,
+      showNotification: true,
+      openFileFromNotification: true,
+      saveInPublicStorage: true,
+    );
+  }
+
+  ///MENAMPILKAN DIALOG LOGOUT
+  void confirmLogout() {
+    log("LOGOUT FROM ARK");
+    AppDialog.dialogWithQuestion(
+      'Keluar',
+      'Anda yakin ingin keluar?',
+      'Batal',
+      'Lanjut',
+      () => logout(),
+    );
+  }
+
+  Future<void> logout() async {
+    try {
+      GetPlatform.isAndroid
+          ? await _googleSignIn.signOut()
+          : await _googleSignInIos.signOut();
+      await FacebookAuth.instance.logOut();
+      await _pref.clear();
+      Get.back();
+      Get.offAllNamed("/main");
+    } catch (e) {
+      log("ERROR LOGOUT : $e");
+    }
   }
 }

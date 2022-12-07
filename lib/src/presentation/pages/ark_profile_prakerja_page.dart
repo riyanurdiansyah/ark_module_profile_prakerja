@@ -1,4 +1,5 @@
 import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
+import 'package:ark_module_profile_prakerja/src/presentation/pages/ark_setting_profile_page.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_aktifitas_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_nilai_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_sertifikat_widget.dart';
@@ -41,7 +42,7 @@ class ArkProfilePrakerjaPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () => Get.to(() => ArkSettingProfilePage()),
               child: const Icon(
                 Icons.settings,
                 color: Colors.white,

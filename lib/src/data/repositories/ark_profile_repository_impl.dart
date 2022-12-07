@@ -73,4 +73,16 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
       return Left(ExceptionHandleResponse().execute(e));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> saveGenerateSertifikat(
+      String token, String courseId) async {
+    try {
+      final response = await dataSource.saveGenerateSertifikat(token, courseId);
+      return Right(response);
+    } catch (e) {
+      log("ERROR PROFILE REPO SAVE GEN SERTIFIKAT : ${e.toString()}");
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
 }
