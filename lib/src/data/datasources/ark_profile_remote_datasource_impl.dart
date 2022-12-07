@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:ark_module_profile_prakerja/src/data/datasources/ark_profile_remote_datasource.dart';
+import 'package:ark_module_profile_prakerja/src/data/dto/my_aktifitas_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_course_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_nilai_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_sertifikat_dto.dart';
@@ -105,6 +106,30 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       code,
       response,
       'Error GET MY NILAI... failed connect to server',
+    );
+  }
+
+  @override
+  Future<List<MyAktifitasDTO>> getMyAktifitas(String token) async {
+    await dioInterceptor(dio, token);
+
+    final response = await dio.get(
+      apiProfileUrl,
+      queryParameters: {
+        "tab": "activity",
+      },
+      options: dioOptions(),
+    );
+    log("RESPONSE MY AKTIFITAS : ${response.data}");
+    final data = json.encode(response.data);
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return myAktifitasFromJsonToList(data);
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error GET MY AKTIFITAS... failed connect to server',
     );
   }
 }

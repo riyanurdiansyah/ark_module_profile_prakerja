@@ -23,6 +23,7 @@ dependencies:
   pinch_zoom: ^1.0.0
   shared_preferences: ^2.0.8
   shimmer: ^2.0.0
+  timelines: ^0.1.0
 
 dev_dependencies:
   flutter_test:

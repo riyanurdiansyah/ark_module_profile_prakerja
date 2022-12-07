@@ -1,4 +1,5 @@
 import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
+import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_aktifitas_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_nilai_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_sertifikat_widget.dart';
 import 'package:flutter/material.dart';
@@ -205,9 +206,7 @@ class ArkProfilePrakerjaPage extends StatelessWidget {
                   children: [
                     ArkSertifikatWidget(),
                     ArkNilaiWidget(),
-                    Container(
-                      color: Colors.yellow,
-                    ),
+                    ArkAktifitasWidget(),
                   ],
                 ),
               ),

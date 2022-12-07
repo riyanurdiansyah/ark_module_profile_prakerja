@@ -75,7 +75,7 @@ class ArkSertifikatLoadingWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

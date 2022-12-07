@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:ark_module_profile_prakerja/src/data/datasources/ark_profile_remote_datasource.dart';
+import 'package:ark_module_profile_prakerja/src/domain/entities/my_aktifitas_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_course_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_nilai_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_entity.dart';
@@ -57,6 +58,18 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET MY NILAI : ${e.toString()}");
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<MyAktifitasEntity>>> getMyAktifitas(
+      String token) async {
+    try {
+      final response = await dataSource.getMyAktifitas(token);
+      return Right(response);
+    } catch (e) {
+      log("ERROR PROFILE REPO GET MY AKTIFITAS : ${e.toString()}");
       return Left(ExceptionHandleResponse().execute(e));
     }
   }

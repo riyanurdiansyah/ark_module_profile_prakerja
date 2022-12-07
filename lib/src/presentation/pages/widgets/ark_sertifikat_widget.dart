@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/ark_hero_image_page.dart';
+import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_empty_widget.dart';
+import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_error_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_sertifikat_loading_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -24,37 +28,13 @@ class ArkSertifikatWidget extends StatelessWidget {
         }
 
         if (_pC.isHaveErrorSertifikat.value) {
-          return SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.error_outline_rounded,
-                  size: 55,
-                  color: Colors.red,
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                Text(
-                  "Gagal memuat data... silahkan coba lagi",
-                  style: TextStyle(
-                    color: Colors.grey.shade400,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                OutlinedButton(
-                  onPressed: () async => await _pC.fetchMySertifikat(),
-                  child: const Text("Refresh"),
-                ),
-              ],
-            ),
-          );
+          return ArkErrorWidget(onRefresh: () => _pC.fetchMySertifikat());
+        }
+
+        if (_pC.mySertifikat.value.certificates.isEmpty) {
+          return ArkEmptyWidget(onTap: () {
+            log("");
+          });
         }
         return SingleChildScrollView(
           child: Column(
