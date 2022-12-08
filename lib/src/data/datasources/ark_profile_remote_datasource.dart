@@ -16,4 +16,6 @@ abstract class ArkProfileRemoteDataSource {
   Future<List<MyAktifitasDTO>> getMyAktifitas(String token);
 
   Future<bool> saveGenerateSertifikat(String token, String courseId);
+
+  Future<String> generateSertifikat(int userId, int courseId);
 }

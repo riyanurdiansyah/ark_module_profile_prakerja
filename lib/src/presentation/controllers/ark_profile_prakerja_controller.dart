@@ -174,14 +174,20 @@ class ArkProfilePrakerjaController extends GetxController {
         _mySertifikat.value.certificates[index].id.toString());
     response.fold((Failure fail) => ExceptionHandle.execute(fail),
         (data) async {
-      if (data) {
-        await generateSertifikat(
-            _mySertifikat.value.certificates[index].id.toString());
+      if (data == true) {
+        await generateSertifikat(_mySertifikat.value.certificates[index].id);
       }
     });
   }
 
-  Future generateSertifikat(String courseId) async {}
+  Future generateSertifikat(int courseId) async {
+    final response = await _usecase.generateSertifikat(_userId.value, courseId);
+    response.fold((Failure fail) async {
+      ExceptionHandle.execute(fail);
+    }, (data) async {
+      // _myCourses.value = data;
+    });
+  }
 
   Future fetchMyCourse() async {
     final response = await _usecase.getMyCourse(tokenPrakerjaMigrate, 100);

@@ -3,6 +3,7 @@ import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/ark_hero_image_page.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_empty_widget.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_error_widget.dart';
+import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_generate_sertifikat_page.dart';
 import 'package:ark_module_profile_prakerja/src/presentation/pages/widgets/ark_sertifikat_loading_widget.dart';
 import 'package:ark_module_profile_prakerja/utils/app_bottomsheet.dart';
 import 'package:ark_module_profile_prakerja/utils/app_dialog.dart';
@@ -125,21 +126,26 @@ class ArkSertifikatWidget extends StatelessWidget {
                         ),
                       Obx(() {
                         if (_pC.listStatusGenerate[i]) {
-                          return SizedBox(
-                            height: 280,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                SizedBox(
-                                  width: 28,
-                                  height: 28,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 4,
-                                  ),
-                                ),
-                              ],
-                            ),
+                          return ArkGenerateSertifikaPage(
+                            url: "",
+                            onAction: () async {},
                           );
+
+                          // return SizedBox(
+                          //   height: 280,
+                          //   child: Column(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: const [
+                          //       SizedBox(
+                          //         width: 28,
+                          //         height: 28,
+                          //         child: CircularProgressIndicator(
+                          //           strokeWidth: 4,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // );
                         }
                         return GestureDetector(
                           onTap: () => Navigator.push(

@@ -7,6 +7,7 @@ import 'package:ark_module_profile_prakerja/src/data/dto/my_course_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_nilai_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_sertifikat_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/profile_dto.dart';
+import 'package:ark_module_profile_prakerja/utils/app_constanta.dart';
 import 'package:ark_module_profile_prakerja/utils/app_url.dart';
 import 'package:dio/dio.dart';
 import '../../core/dio_options.dart';
@@ -150,6 +151,25 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       code,
       response,
       'Error GET MY SAVE GENERATE SERTIF... failed connect to server',
+    );
+  }
+
+  @override
+  Future<String> generateSertifikat(int userId, int courseId) async {
+    await dioInterceptor(dio, tokenPrakerjaMigrate);
+    final response = await dio.get(
+      "https://stag-prakerja-apimember-fgt.arkademi.com/api/arkademi/generate_certificate/39636/15540551",
+      options: dioOptions(),
+    );
+    log("RESPONSE GENERATE SERTIFIKAT : ${response.data}");
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return "";
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error Generate Sertifikat... failed connect to server',
     );
   }
 }

@@ -32,4 +32,8 @@ class ArkProfileUseCase {
   Future<Either<Failure, bool>> saveGenerateSertifikat(
           String token, String courseId) async =>
       await _repository.saveGenerateSertifikat(token, courseId);
+
+  Future<Either<Failure, String>> generateSertifikat(
+          int userId, int courseId) async =>
+      await _repository.generateSertifikat(userId, courseId);
 }

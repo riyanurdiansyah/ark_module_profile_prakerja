@@ -6,6 +6,10 @@ Options dioOptions({
   return Options(
     followRedirects: false,
     validateStatus: (status) => true,
-    headers: headers ?? {},
+    headers: headers ??
+        {
+          "Accept": "*/*",
+          "Content-Type": "application/json",
+        },
   );
 }

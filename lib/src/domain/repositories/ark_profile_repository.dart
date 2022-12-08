@@ -20,4 +20,6 @@ abstract class ArkProfileRepository {
 
   Future<Either<Failure, bool>> saveGenerateSertifikat(
       String token, String courseId);
+
+  Future<Either<Failure, String>> generateSertifikat(int userId, int courseId);
 }
