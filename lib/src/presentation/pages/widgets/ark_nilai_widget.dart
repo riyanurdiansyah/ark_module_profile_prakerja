@@ -5,6 +5,8 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'ark_error_widget.dart';
+
 class ArkNilaiWidget extends StatelessWidget {
   ArkNilaiWidget({Key? key}) : super(key: key);
 
@@ -19,6 +21,10 @@ class ArkNilaiWidget extends StatelessWidget {
         child: Obx(() {
           if (_pC.isLoadingNilai.value) {
             return const ArkNilaiLoadingWidget();
+          }
+
+          if (_pC.isHaveErrorNilai.value) {
+            return ArkErrorWidget(onRefresh: () => _pC.fetchMyNilai());
           }
 
           return ListView(
