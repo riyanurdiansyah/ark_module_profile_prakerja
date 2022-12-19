@@ -11,6 +11,8 @@ import 'package:ark_module_profile_prakerja/src/domain/repositories/ark_profile_
 import 'package:dartz/dartz.dart';
 
 import '../../core/exception_handling.dart';
+import '../../domain/entities/city_entity.dart';
+import '../../domain/entities/provinsi_entity.dart';
 
 class ArkProfileRepositoryImpl implements ArkProfileRepository {
   ArkProfileRemoteDataSource dataSource;
@@ -94,6 +96,26 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GENERATE SERTIFIKAT : ${e.toString()}");
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, ProvinsiEntity>> getProvinsi() async {
+    try {
+      final provinsi = await dataSource.getProvinsi();
+      return Right(provinsi);
+    } catch (e) {
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, CityEntity>> getCity(int id) async {
+    try {
+      final city = await dataSource.getCity(id);
+      return Right(city);
+    } catch (e) {
       return Left(ExceptionHandleResponse().execute(e));
     }
   }

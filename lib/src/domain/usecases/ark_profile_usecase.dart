@@ -6,6 +6,8 @@ import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_en
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/repositories/ark_profile_repository.dart';
 import 'package:dartz/dartz.dart';
+import '../entities/city_entity.dart';
+import '../entities/provinsi_entity.dart';
 
 class ArkProfileUseCase {
   final ArkProfileRepository _repository;
@@ -36,4 +38,10 @@ class ArkProfileUseCase {
   Future<Either<Failure, String>> generateSertifikat(
           int userId, int courseId) async =>
       await _repository.generateSertifikat(userId, courseId);
+
+  Future<Either<Failure, ProvinsiEntity>> getProvinsi() async =>
+      await _repository.getProvinsi();
+
+  Future<Either<Failure, CityEntity>> getCity(int id) async =>
+      await _repository.getCity(id);
 }

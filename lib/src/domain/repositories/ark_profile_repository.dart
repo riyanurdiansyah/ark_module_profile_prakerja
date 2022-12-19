@@ -6,6 +6,9 @@ import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_en
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:dartz/dartz.dart';
 
+import '../entities/city_entity.dart';
+import '../entities/provinsi_entity.dart';
+
 abstract class ArkProfileRepository {
   Future<Either<Failure, ProfileEntity>> getProfile(String token);
 
@@ -22,4 +25,8 @@ abstract class ArkProfileRepository {
       String token, String courseId);
 
   Future<Either<Failure, String>> generateSertifikat(int userId, int courseId);
+
+  Future<Either<Failure, ProvinsiEntity>> getProvinsi();
+
+  Future<Either<Failure, CityEntity>> getCity(int id);
 }

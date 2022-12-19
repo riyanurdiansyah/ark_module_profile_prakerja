@@ -7,12 +7,13 @@ import 'package:ark_module_profile_prakerja/src/data/dto/my_course_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_nilai_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_sertifikat_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/profile_dto.dart';
-import 'package:ark_module_profile_prakerja/utils/app_constanta.dart';
 import 'package:ark_module_profile_prakerja/utils/app_url.dart';
 import 'package:dio/dio.dart';
 import '../../core/dio_options.dart';
 import '../../core/exception_handling.dart';
 import '../../core/interceptor.dart';
+import '../dto/city_dto.dart';
+import '../dto/provinsi_dto.dart';
 
 class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   late Dio dio;
@@ -156,9 +157,8 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
 
   @override
   Future<String> generateSertifikat(int userId, int courseId) async {
-    await dioInterceptor(dio, tokenPrakerjaMigrate);
     final response = await dio.get(
-      "https://stag-prakerja-apimember-fgt.arkademi.com/api/arkademi/generate_certificate/39636/15540551",
+      "$apiGenerateSertifikatUrl/$userId/$courseId",
       options: dioOptions(),
     );
     log("RESPONSE GENERATE SERTIFIKAT : ${response.data}");
@@ -170,6 +170,41 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       code,
       response,
       'Error Generate Sertifikat... failed connect to server',
+    );
+  }
+
+  @override
+  Future<ProvinsiDTO> getProvinsi() async {
+    final response = await dio.get(provinsiUrl);
+    log("RESPONSE GET PROVINSI : ${response.data}");
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return ProvinsiDTO.fromJson(response.data);
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error Get Provinsi... failed connect to server',
+    );
+  }
+
+  @override
+  Future<CityDTO> getCity(int id) async {
+    final response = await dio.get(
+      cityUrl,
+      queryParameters: {
+        "id_provinsi": id,
+      },
+    );
+    log("RESPONSE GET CITY : ${response.data}");
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return CityDTO.fromJson(response.data);
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error Get Provinsi... failed connect to server',
     );
   }
 }

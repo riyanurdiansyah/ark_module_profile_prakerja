@@ -1,6 +1,6 @@
 const String prakerjaWpUrl = "https://prakerja.arkademi.com";
 
-const String apiMemberUrl = "https://stag-prakerja-apimember-fgt.arkademi.com";
+const String apiMemberUrl = "https://prakerja-api-member.arkademi.com";
 
 const String apiProfileUrl = "$apiMemberUrl/api/v1/prakerja/profile";
 
@@ -12,3 +12,8 @@ const String apiGenerateSertifikatUrl =
 
 const String saveGenerateSertifUrl =
     "$prakerjaWpUrl/wp-json/api/arkademi/save_cert_gen_counter";
+
+const String provinsiUrl =
+    "https://dev.farizdotid.com/api/daerahindonesia/provinsi";
+
+const String cityUrl = "https://dev.farizdotid.com/api/daerahindonesia/kota";

@@ -16,6 +16,9 @@ dependencies:
   firebase_analytics: ^9.1.9
   flutter:
     sdk: flutter
+  flutter_datetime_picker:
+    git:
+      url: https://github.com/Realank/flutter_datetime_picker.git
   flutter_downloader:
     git:
       url: https://github.com/thecaptrex/flutter_downloader.git

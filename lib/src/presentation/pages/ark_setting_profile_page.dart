@@ -2,8 +2,8 @@ import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ArkSettingProfilePage extends StatelessWidget {
-  ArkSettingProfilePage({Key? key}) : super(key: key);
+class ArkSettingProfilePagePrakerja extends StatelessWidget {
+  ArkSettingProfilePagePrakerja({Key? key}) : super(key: key);
 
   final _pC = Get.find<ArkProfilePrakerjaController>();
 
@@ -24,43 +24,44 @@ class ArkSettingProfilePage extends StatelessWidget {
               fontSize: 15),
         ),
       ),
-      body: Column(children: [
-        Container(
-          color: Colors.white,
-          width: Get.size.width,
-          height: 100,
-          padding: const EdgeInsets.only(top: 20, left: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Profil',
-                style: TextStyle(
-                    color: Color.fromRGBO(62, 63, 67, 1),
-                    fontWeight: FontWeight.w800,
-                    fontSize: 17),
-              ),
-              const SizedBox(height: 10),
-              InkWell(
-                onTap: () {},
-                child: Row(
-                  children: const [
-                    Icon(Icons.people_outline, size: 20),
-                    SizedBox(width: 10),
-                    Text(
-                      'Ubah Profile',
-                      style: TextStyle(
-                          color: Color.fromRGBO(51, 53, 57, 1),
-                          fontWeight: FontWeight.w600),
-                    )
-                  ],
+      body: Column(
+        children: [
+          Container(
+            color: Colors.white,
+            width: Get.size.width,
+            height: 100,
+            padding: const EdgeInsets.only(top: 20, left: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Profil',
+                  style: TextStyle(
+                      color: Color.fromRGBO(62, 63, 67, 1),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 17),
                 ),
-              )
-            ],
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () => Get.toNamed("/edit-profile-prakerja"),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.people_outline, size: 20),
+                      SizedBox(width: 10),
+                      Text(
+                        'Ubah Profile',
+                        style: TextStyle(
+                            color: Color.fromRGBO(51, 53, 57, 1),
+                            fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 5),
-        Container(
+          const SizedBox(height: 5),
+          Container(
             color: Colors.white,
             width: Get.size.width,
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -87,17 +88,20 @@ class ArkSettingProfilePage extends StatelessWidget {
                   ),
                 )
               ],
-            )),
-        SizedBox(height: Get.size.height * 0.3),
-        Center(
+            ),
+          ),
+          SizedBox(height: Get.size.height * 0.3),
+          Center(
             child: Text(
-          'Versi aplikasi v${_pC.version.value}',
-          style: const TextStyle(
-              color: Color.fromRGBO(148, 150, 155, 1),
-              fontSize: 11,
-              fontWeight: FontWeight.w400),
-        ))
-      ]),
+              'Versi aplikasi v${_pC.version.value}',
+              style: const TextStyle(
+                  color: Color.fromRGBO(148, 150, 155, 1),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w400),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

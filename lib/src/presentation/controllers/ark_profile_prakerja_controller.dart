@@ -13,7 +13,6 @@ import 'package:ark_module_profile_prakerja/src/domain/entities/my_nilai_entity.
 import 'package:ark_module_profile_prakerja/src/domain/entities/my_sertifikat_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/entities/profile_entity.dart';
 import 'package:ark_module_profile_prakerja/src/domain/usecases/ark_profile_usecase.dart';
-import 'package:ark_module_profile_prakerja/utils/app_constanta.dart';
 import 'package:ark_module_profile_prakerja/utils/app_dialog.dart';
 import 'package:ark_module_profile_prakerja/utils/app_empty_entity.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -162,7 +161,7 @@ class ArkProfilePrakerjaController extends GetxController {
   }
 
   Future fetchProfile() async {
-    final response = await _usecase.getProfile(tokenPrakerjaMigrate);
+    final response = await _usecase.getProfile(_tokenPrakerja.value);
     response.fold((Failure fail) => ExceptionHandle.execute(fail), (data) {
       _profile.value = data;
     });
@@ -190,7 +189,7 @@ class ArkProfilePrakerjaController extends GetxController {
   }
 
   Future fetchMyCourse() async {
-    final response = await _usecase.getMyCourse(tokenPrakerjaMigrate, 100);
+    final response = await _usecase.getMyCourse(_tokenPrakerja.value, 100);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
     }, (data) async {
@@ -200,7 +199,7 @@ class ArkProfilePrakerjaController extends GetxController {
 
   Future fetchMyNilai() async {
     _changeLoadingNilai(true);
-    final response = await _usecase.getMyNilai(tokenPrakerjaMigrate);
+    final response = await _usecase.getMyNilai(_tokenPrakerja.value);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
       await _changeHaveErrorNilai(true);
@@ -230,7 +229,7 @@ class ArkProfilePrakerjaController extends GetxController {
 
   Future fetchMyAktifitas() async {
     _changeLoadingAktifitas(true);
-    final response = await _usecase.getMyAktifitas(tokenPrakerjaMigrate);
+    final response = await _usecase.getMyAktifitas(_tokenPrakerja.value);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
       await _changeHaveErrorAktifitas(true);

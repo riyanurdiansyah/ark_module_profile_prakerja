@@ -42,7 +42,7 @@ class ArkProfilePrakerjaPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: GestureDetector(
-              onTap: () => Get.to(() => ArkSettingProfilePage()),
+              onTap: () => Get.to(() => ArkSettingProfilePagePrakerja()),
               child: const Icon(
                 Icons.settings,
                 color: Colors.white,
@@ -57,10 +57,13 @@ class ArkProfilePrakerjaPage extends StatelessWidget {
         child: Container(
           width: Get.width,
           height: Get.height,
-          padding: const EdgeInsets.symmetric(vertical: 25),
+          padding: const EdgeInsets.symmetric(vertical: 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 25,
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 18),
                 child: Row(

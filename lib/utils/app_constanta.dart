@@ -2,7 +2,7 @@
 import 'package:html/parser.dart';
 import 'package:intl/intl.dart';
 
-const String tokenPrakerjaMigrate = "Q^kJMDm^f^@8sJaQ6Cgyit5VilnlCp*A%b4UUDU%";
+// const String tokenPrakerjaMigrate = "Q^kJMDm^f^@8sJaQ6Cgyit5VilnlCp*A%b4UUDU%";
 
 const double width320Pixel = 321;
 const double width360Pixel = 361;
@@ -28,4 +28,24 @@ List<String> prakerjaInfo = [
   'Sehingga jika siswa menyelesaikan seluruh materi serta lulus pada kuis dan post-test, akan mendapatkan dua sertifikat, yaitu sertifikat penyelesaian dan sertifikat kompetensi lulusan.',
   'Silahkan masuk ke menu "Sertifikat" untuk mengakses sertifikat Anda.',
   'Sertifikat Prakerja akan dikirimkan kepada PMO melalui marketplace 1x24 jam hari kerja untuk ditampilkan pada Dashboard Prakerja siswa.',
+];
+
+List<String> listProfesi = [
+  'Silahkan Pilih Profesi',
+  'Karyawan Swasta',
+  'PNS & BUMN',
+  'Profesional',
+  'Wiraswasta',
+  'Pelajar/Mahasiswa',
+  'Belum Bekerja',
+  'Lainnya',
+];
+
+List<String> listPendidikan = [
+  "Silahkan Pilih Pendidikan",
+  "SD",
+  "SMP",
+  "SMA",
+  "S1",
+  "S2",
 ];

@@ -4,6 +4,9 @@ import 'package:ark_module_profile_prakerja/src/data/dto/my_nilai_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/my_sertifikat_dto.dart';
 import 'package:ark_module_profile_prakerja/src/data/dto/profile_dto.dart';
 
+import '../dto/city_dto.dart';
+import '../dto/provinsi_dto.dart';
+
 abstract class ArkProfileRemoteDataSource {
   Future<ProfileDTO> getProfile(String token);
 
@@ -18,4 +21,8 @@ abstract class ArkProfileRemoteDataSource {
   Future<bool> saveGenerateSertifikat(String token, String courseId);
 
   Future<String> generateSertifikat(int userId, int courseId);
+
+  Future<ProvinsiDTO> getProvinsi();
+
+  Future<CityDTO> getCity(int id);
 }
