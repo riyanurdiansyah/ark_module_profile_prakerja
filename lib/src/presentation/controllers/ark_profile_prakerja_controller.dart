@@ -96,6 +96,11 @@ class ArkProfilePrakerjaController extends GetxController {
     clientId:
         '265001851813-uvseu68037o8lpo126p679sbm3sesns6.apps.googleusercontent.com',
   );
+
+  final Rx<String> _baseUrlWp = "".obs;
+  final Rx<String> _baseUrlApiCourse = "".obs;
+  final Rx<String> _baseUrlApiMember = "".obs;
+
   @override
   void onInit() async {
     _getVersion();
@@ -134,6 +139,12 @@ class ArkProfilePrakerjaController extends GetxController {
     _userId.value = _pref.getString('user_id_prakerja') != null
         ? int.parse(_pref.getString('user_id_prakerja')!)
         : 0;
+
+    _baseUrlWp.value = _pref.getString("prakerja_api_wp_url")!;
+    _baseUrlApiCourse.value = _pref.getString("prakerja_api_course_url")!;
+    _baseUrlApiMember.value = _pref.getString("prakerja_api_member_url")!;
+
+    log("CHECK TOKEN : ${_tokenPrakerja.value}");
   }
 
   Future _changeLoadingSertifikat(bool val) async {
@@ -161,7 +172,8 @@ class ArkProfilePrakerjaController extends GetxController {
   }
 
   Future fetchProfile() async {
-    final response = await _usecase.getProfile(_tokenPrakerja.value);
+    final response = await _usecase.getProfile(
+        _baseUrlApiMember.value, _tokenPrakerja.value);
     response.fold((Failure fail) => ExceptionHandle.execute(fail), (data) {
       _profile.value = data;
     });
@@ -169,7 +181,9 @@ class ArkProfilePrakerjaController extends GetxController {
 
   Future saveGenerateSertifikat(int index) async {
     _listStatusGenerate[index] = true;
-    final response = await _usecase.saveGenerateSertifikat(_tokenPrakerja.value,
+    final response = await _usecase.saveGenerateSertifikat(
+        _baseUrlApiMember.value,
+        _tokenPrakerja.value,
         _mySertifikat.value.certificates[index].id.toString());
     response.fold((Failure fail) => ExceptionHandle.execute(fail),
         (data) async {
@@ -180,7 +194,8 @@ class ArkProfilePrakerjaController extends GetxController {
   }
 
   Future generateSertifikat(int courseId) async {
-    final response = await _usecase.generateSertifikat(_userId.value, courseId);
+    final response = await _usecase.generateSertifikat(
+        _baseUrlApiMember.value, _userId.value, courseId);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
     }, (data) async {
@@ -189,7 +204,8 @@ class ArkProfilePrakerjaController extends GetxController {
   }
 
   Future fetchMyCourse() async {
-    final response = await _usecase.getMyCourse(_tokenPrakerja.value, 100);
+    final response = await _usecase.getMyCourse(
+        _baseUrlApiMember.value, _tokenPrakerja.value, 100);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
     }, (data) async {
@@ -199,7 +215,8 @@ class ArkProfilePrakerjaController extends GetxController {
 
   Future fetchMyNilai() async {
     _changeLoadingNilai(true);
-    final response = await _usecase.getMyNilai(_tokenPrakerja.value);
+    final response = await _usecase.getMyNilai(
+        _baseUrlApiMember.value, _tokenPrakerja.value);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
       await _changeHaveErrorNilai(true);
@@ -214,7 +231,8 @@ class ArkProfilePrakerjaController extends GetxController {
   Future fetchMySertifikat() async {
     _changeLoadingSertifikat(true);
     log("ID : ${_userId.value}");
-    final response = await _usecase.getMySertifikat(_userId.value);
+    final response =
+        await _usecase.getMySertifikat(_baseUrlApiMember.value, _userId.value);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
       await _changeHaveErrorSertifikat(true);
@@ -229,7 +247,8 @@ class ArkProfilePrakerjaController extends GetxController {
 
   Future fetchMyAktifitas() async {
     _changeLoadingAktifitas(true);
-    final response = await _usecase.getMyAktifitas(_tokenPrakerja.value);
+    final response = await _usecase.getMyAktifitas(
+        _baseUrlApiMember.value, _tokenPrakerja.value);
     response.fold((Failure fail) async {
       ExceptionHandle.execute(fail);
       await _changeHaveErrorAktifitas(true);

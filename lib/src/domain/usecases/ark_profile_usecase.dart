@@ -13,31 +13,33 @@ class ArkProfileUseCase {
   final ArkProfileRepository _repository;
   ArkProfileUseCase(this._repository);
 
-  Future<Either<Failure, ProfileEntity>> getProfile(String token) async =>
-      await _repository.getProfile(token);
+  Future<Either<Failure, ProfileEntity>> getProfile(
+          String baseUrl, String token) async =>
+      await _repository.getProfile(baseUrl, token);
 
   Future<Either<Failure, List<MyCourseEntity>>> getMyCourse(
-          String token, int perPage) async =>
-      await _repository.getMyCourse(token, perPage);
+          String baseUrl, String token, int perPage) async =>
+      await _repository.getMyCourse(baseUrl, token, perPage);
 
   Future<Either<Failure, MySertifikatEntity>> getMySertifikat(
-          int userId) async =>
-      await _repository.getMySertifikat(userId);
+          String baseUrl, int userId) async =>
+      await _repository.getMySertifikat(baseUrl, userId);
 
-  Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(String token) async =>
-      await _repository.getMyNilai(token);
+  Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(
+          String baseUrl, String token) async =>
+      await _repository.getMyNilai(baseUrl, token);
 
   Future<Either<Failure, List<MyAktifitasEntity>>> getMyAktifitas(
-          String token) async =>
-      await _repository.getMyAktifitas(token);
+          String baseUrl, String token) async =>
+      await _repository.getMyAktifitas(baseUrl, token);
 
   Future<Either<Failure, bool>> saveGenerateSertifikat(
-          String token, String courseId) async =>
-      await _repository.saveGenerateSertifikat(token, courseId);
+          String baseUrl, String token, String courseId) async =>
+      await _repository.saveGenerateSertifikat(baseUrl, token, courseId);
 
   Future<Either<Failure, String>> generateSertifikat(
-          int userId, int courseId) async =>
-      await _repository.generateSertifikat(userId, courseId);
+          String baseUrl, int userId, int courseId) async =>
+      await _repository.generateSertifikat(baseUrl, userId, courseId);
 
   Future<Either<Failure, ProvinsiEntity>> getProvinsi() async =>
       await _repository.getProvinsi();

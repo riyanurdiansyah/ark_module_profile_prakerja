@@ -19,9 +19,10 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
   ArkProfileRepositoryImpl(this.dataSource);
 
   @override
-  Future<Either<Failure, ProfileEntity>> getProfile(String token) async {
+  Future<Either<Failure, ProfileEntity>> getProfile(
+      String baseUrl, String token) async {
     try {
-      final response = await dataSource.getProfile(token);
+      final response = await dataSource.getProfile(baseUrl, token);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET PROFILE : ${e.toString()}");
@@ -31,9 +32,9 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
 
   @override
   Future<Either<Failure, List<MyCourseEntity>>> getMyCourse(
-      String token, int perPage) async {
+      String baseUrl, String token, int perPage) async {
     try {
-      final response = await dataSource.getMyCourse(token, perPage);
+      final response = await dataSource.getMyCourse(baseUrl, token, perPage);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET MY COURSE : ${e.toString()}");
@@ -43,9 +44,9 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
 
   @override
   Future<Either<Failure, MySertifikatEntity>> getMySertifikat(
-      int userId) async {
+      String baseUrl, int userId) async {
     try {
-      final response = await dataSource.getMySertifikat(userId);
+      final response = await dataSource.getMySertifikat(baseUrl, userId);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET MY SERTIFIKAT : ${e.toString()}");
@@ -54,9 +55,10 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
   }
 
   @override
-  Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(String token) async {
+  Future<Either<Failure, List<MyNilaiEntity>>> getMyNilai(
+      String baseUrl, String token) async {
     try {
-      final response = await dataSource.getMyNilai(token);
+      final response = await dataSource.getMyNilai(baseUrl, token);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET MY NILAI : ${e.toString()}");
@@ -66,9 +68,9 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
 
   @override
   Future<Either<Failure, List<MyAktifitasEntity>>> getMyAktifitas(
-      String token) async {
+      String baseUrl, String token) async {
     try {
-      final response = await dataSource.getMyAktifitas(token);
+      final response = await dataSource.getMyAktifitas(baseUrl, token);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GET MY AKTIFITAS : ${e.toString()}");
@@ -78,9 +80,10 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
 
   @override
   Future<Either<Failure, bool>> saveGenerateSertifikat(
-      String token, String courseId) async {
+      String baseUrl, String token, String courseId) async {
     try {
-      final response = await dataSource.saveGenerateSertifikat(token, courseId);
+      final response =
+          await dataSource.saveGenerateSertifikat(baseUrl, token, courseId);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO SAVE GEN SERTIFIKAT : ${e.toString()}");
@@ -90,9 +93,10 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
 
   @override
   Future<Either<Failure, String>> generateSertifikat(
-      int userId, int courseId) async {
+      String baseUrl, int userId, int courseId) async {
     try {
-      final response = await dataSource.generateSertifikat(userId, courseId);
+      final response =
+          await dataSource.generateSertifikat(baseUrl, userId, courseId);
       return Right(response);
     } catch (e) {
       log("ERROR PROFILE REPO GENERATE SERTIFIKAT : ${e.toString()}");

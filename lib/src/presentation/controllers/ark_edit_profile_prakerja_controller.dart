@@ -102,6 +102,8 @@ class ArkEditProfilePrakerjaController extends GetxController {
   final Rx<CityEntity> _city = const CityEntity(kotaKabupaten: []).obs;
   Rx<CityEntity> get city => _city;
 
+  final Rx<String> _baseUrlApiMember = "".obs;
+
   @override
   void onInit() async {
     await _setup();
@@ -147,6 +149,7 @@ class ArkEditProfilePrakerjaController extends GetxController {
     _userId.value = _pref.getString('user_id_prakerja') != null
         ? int.parse(_pref.getString('user_id_prakerja')!)
         : 0;
+    _baseUrlApiMember.value = _pref.getString('prakerja_api_member_url')!;
   }
 
   void fnOnChangedGender(JenisKelamin? val) {
@@ -154,7 +157,8 @@ class ArkEditProfilePrakerjaController extends GetxController {
   }
 
   Future fetchProfile() async {
-    final response = await _usecase.getProfile(_tokenPrakerja.value);
+    final response = await _usecase.getProfile(
+        _baseUrlApiMember.value, _tokenPrakerja.value);
     response.fold((Failure fail) => ExceptionHandle.execute(fail), (data) {
       _profile.value = data;
     });

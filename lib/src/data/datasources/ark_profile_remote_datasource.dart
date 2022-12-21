@@ -8,19 +8,21 @@ import '../dto/city_dto.dart';
 import '../dto/provinsi_dto.dart';
 
 abstract class ArkProfileRemoteDataSource {
-  Future<ProfileDTO> getProfile(String token);
+  Future<ProfileDTO> getProfile(String baseUrl, String token);
 
-  Future<List<MyCourseDTO>> getMyCourse(String token, int perPage);
+  Future<List<MyCourseDTO>> getMyCourse(
+      String baseUrl, String token, int perPage);
 
-  Future<MySertifikatDTO> getMySertifikat(int userId);
+  Future<MySertifikatDTO> getMySertifikat(String baseUrl, int userId);
 
-  Future<List<MyNilaiDTO>> getMyNilai(String token);
+  Future<List<MyNilaiDTO>> getMyNilai(String baseUrl, String token);
 
-  Future<List<MyAktifitasDTO>> getMyAktifitas(String token);
+  Future<List<MyAktifitasDTO>> getMyAktifitas(String baseUrl, String token);
 
-  Future<bool> saveGenerateSertifikat(String token, String courseId);
+  Future<bool> saveGenerateSertifikat(
+      String baseUrl, String token, String courseId);
 
-  Future<String> generateSertifikat(int userId, int courseId);
+  Future<String> generateSertifikat(String baseUrl, int userId, int courseId);
 
   Future<ProvinsiDTO> getProvinsi();
 

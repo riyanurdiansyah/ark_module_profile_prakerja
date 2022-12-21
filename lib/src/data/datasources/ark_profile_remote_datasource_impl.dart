@@ -22,11 +22,11 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<ProfileDTO> getProfile(String token) async {
+  Future<ProfileDTO> getProfile(String baseUrl, String token) async {
     await dioInterceptor(dio, token);
 
     final response = await dio.get(
-      apiProfileUrl,
+      "$baseUrl/api/v1/prakerja/profile",
       queryParameters: {
         "tab": "profile",
       },
@@ -45,11 +45,12 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<List<MyCourseDTO>> getMyCourse(String token, int perPage) async {
+  Future<List<MyCourseDTO>> getMyCourse(
+      String baseUrl, String token, int perPage) async {
     await dioInterceptor(dio, token);
 
     final response = await dio.get(
-      apiProfileUrl,
+      "$baseUrl/api/v1/prakerja/profile",
       queryParameters: {
         "tab": "courses",
         "per_page": perPage,
@@ -70,13 +71,13 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<MySertifikatDTO> getMySertifikat(int userId) async {
+  Future<MySertifikatDTO> getMySertifikat(String baseUrl, int userId) async {
     final response = await dio.get(
-      "$apiSertifikatUrl/$userId",
+      "$baseUrl/api/arkademi/get_user_certificate/$userId",
       options: dioOptions(),
     );
+    log("RESPONSE MY SERTIFIKAT : ${"$baseUrl/api/arkademi/get_user_certificate/$userId"}");
     log("RESPONSE MY SERTIFIKAT : ${response.data}");
-    log("RESPONSE MY SERTIFIKAT : ${"$apiSertifikatUrl/$userId"}");
     int code = response.statusCode ?? 500;
     if (code == 200) {
       return MySertifikatDTO.fromJson(response.data);
@@ -89,11 +90,11 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<List<MyNilaiDTO>> getMyNilai(String token) async {
+  Future<List<MyNilaiDTO>> getMyNilai(String baseUrl, String token) async {
     await dioInterceptor(dio, token);
 
     final response = await dio.get(
-      apiProfileUrl,
+      "$baseUrl/api/v1/prakerja/profile",
       queryParameters: {
         "tab": "result_quizes",
       },
@@ -113,11 +114,12 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<List<MyAktifitasDTO>> getMyAktifitas(String token) async {
+  Future<List<MyAktifitasDTO>> getMyAktifitas(
+      String baseUrl, String token) async {
     await dioInterceptor(dio, token);
 
     final response = await dio.get(
-      apiProfileUrl,
+      "$baseUrl/api/v1/prakerja/profile",
       queryParameters: {
         "tab": "activity",
       },
@@ -137,10 +139,11 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<bool> saveGenerateSertifikat(String token, String courseId) async {
+  Future<bool> saveGenerateSertifikat(
+      String baseUrl, String token, String courseId) async {
     await dioInterceptor(dio, token);
     final response = await dio.get(
-      "$saveGenerateSertifUrl/$courseId",
+      "$baseUrl/wp-json/api/arkademi/save_cert_gen_counter/$courseId",
       options: dioOptions(),
     );
     log("RESPONSE MY SAVE GEN : ${response.data}");
@@ -156,9 +159,10 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   }
 
   @override
-  Future<String> generateSertifikat(int userId, int courseId) async {
+  Future<String> generateSertifikat(
+      String baseUrl, int userId, int courseId) async {
     final response = await dio.get(
-      "$apiGenerateSertifikatUrl/$userId/$courseId",
+      "$baseUrl/api/arkademi/generate_certificate/$userId/$courseId",
       options: dioOptions(),
     );
     log("RESPONSE GENERATE SERTIFIKAT : ${response.data}");
