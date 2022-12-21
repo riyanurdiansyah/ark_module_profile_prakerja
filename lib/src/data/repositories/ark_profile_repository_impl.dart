@@ -123,4 +123,27 @@ class ArkProfileRepositoryImpl implements ArkProfileRepository {
       return Left(ExceptionHandleResponse().execute(e));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> updateProfilePrakerja(
+      String baseUrl, String token, Map<String, dynamic> body) async {
+    try {
+      final response =
+          await dataSource.updateProfilePrakerja(baseUrl, token, body);
+      return Right(response);
+    } catch (e) {
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> updateProfile(
+      String token, Map<String, dynamic> profile) async {
+    try {
+      final response = await dataSource.updateProfile(token, profile);
+      return Right(response);
+    } catch (e) {
+      return Left(ExceptionHandleResponse().execute(e));
+    }
+  }
 }

@@ -27,4 +27,9 @@ abstract class ArkProfileRemoteDataSource {
   Future<ProvinsiDTO> getProvinsi();
 
   Future<CityDTO> getCity(int id);
+
+  Future<bool> updateProfilePrakerja(
+      String baseUrl, String token, Map<String, dynamic> body);
+
+  Future<bool> updateProfile(String token, Map<String, dynamic> body);
 }

@@ -76,7 +76,6 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       "$baseUrl/api/arkademi/get_user_certificate/$userId",
       options: dioOptions(),
     );
-    log("RESPONSE MY SERTIFIKAT : ${"$baseUrl/api/arkademi/get_user_certificate/$userId"}");
     log("RESPONSE MY SERTIFIKAT : ${response.data}");
     int code = response.statusCode ?? 500;
     if (code == 200) {
@@ -209,6 +208,41 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
       code,
       response,
       'Error Get Provinsi... failed connect to server',
+    );
+  }
+
+  @override
+  Future<bool> updateProfilePrakerja(
+      String baseUrl, String token, Map<String, dynamic> body) async {
+    await dioInterceptor(dio, token);
+    final response = await dio.put(
+      "$baseUrl/api/v1/prakerja/auth/update/profile",
+      data: body,
+    );
+    log("RESPONSE UPDATE PROFILE PRAKERJA : ${response.data}");
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return true;
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error Update Profile Prakerja... failed connect to server',
+    );
+  }
+
+  @override
+  Future<bool> updateProfile(String token, Map<String, dynamic> body) async {
+    await dioInterceptor(dio, token);
+    final response = await dio.put(updateProfileRegularUrl, data: body);
+    int code = response.statusCode ?? 500;
+    if (code == 200) {
+      return true;
+    }
+    return ExceptionHandleResponseAPI.execute(
+      code,
+      response,
+      'Error Update Profile... failed connect to server',
     );
   }
 }

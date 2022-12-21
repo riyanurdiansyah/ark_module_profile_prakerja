@@ -46,4 +46,12 @@ class ArkProfileUseCase {
 
   Future<Either<Failure, CityEntity>> getCity(int id) async =>
       await _repository.getCity(id);
+
+  Future<Either<Failure, bool>> updateProfilePrakerja(
+          String baseUrl, String token, Map<String, dynamic> body) async =>
+      await _repository.updateProfilePrakerja(baseUrl, token, body);
+
+  Future<Either<Failure, bool>> updateProfile(
+          String token, Map<String, dynamic> body) async =>
+      await _repository.updateProfile(token, body);
 }

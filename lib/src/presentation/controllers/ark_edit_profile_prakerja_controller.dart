@@ -1,9 +1,11 @@
+import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
 import 'package:ark_module_profile_prakerja/utils/app_empty_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/app_constanta.dart';
+import '../../../utils/app_dialog.dart';
 import '../../core/exception_handling.dart';
 import '../../core/failures.dart';
 import '../../data/datasources/ark_profile_remote_datasource_impl.dart';
@@ -104,6 +106,8 @@ class ArkEditProfilePrakerjaController extends GetxController {
 
   final Rx<String> _baseUrlApiMember = "".obs;
 
+  final _pC = Get.find<ArkProfilePrakerjaController>();
+
   @override
   void onInit() async {
     await _setup();
@@ -133,8 +137,89 @@ class ArkEditProfilePrakerjaController extends GetxController {
     super.onInit();
   }
 
+  bool get isCompletedForm =>
+      _tcName.text.isNotEmpty &&
+      _tcHp.text.isNotEmpty &&
+      _txtTanggalLahir.value.isNotEmpty &&
+      _selectedGender.value != JenisKelamin.defaultGender &&
+      _txtPendidikan.value.isNotEmpty &&
+      _txtProfesi.value.isNotEmpty;
+
   Future _changeLoading(bool val) async {
     _isLoading.value = val;
+  }
+
+  void fnCheckStateUpdateProfile() async {
+    if (_formKey.currentState!.validate()) {
+      if (_txtProfesi.value == 'Lainnya' &&
+          _tcProfesiLainnya.value.text.isEmpty) {
+        AppDialog.dialogStateWithLottie(
+          'fail-animation.json',
+          'Profesi lainnya tidak boleh kosong',
+        );
+      } else {
+        AppDialog.dialogLoading();
+        final body = {
+          "nama_lengkap": _tcName.text,
+          "biodata": "",
+          "profesi": _txtProfesi.value == 'Lainnya'
+              ? _tcProfesiLainnya.text
+              : _txtProfesi.value,
+          "no_hp": _tcHp.text,
+          "jenis_kelamin": _selectedGender.value == JenisKelamin.pria
+              ? 'L'
+              : _selectedGender.value == JenisKelamin.wanita
+                  ? 'P'
+                  : '',
+          "tgl_lahir": _txtTanggalLahir.value,
+          "kota": _txtCity.value,
+          "provinsi": _newProvinsi.value.nama == 'Silahkan Pilih Provinsi'
+              ? ''
+              : _newProvinsi.value.nama,
+          "pendidikan_terakhir": _txtPendidikan.value,
+        };
+        updateProfilePrakerja(body);
+        await updateProfile(body);
+      }
+    }
+  }
+
+  Future updateProfilePrakerja(Map<String, dynamic> body) async {
+    final response = await _usecase.updateProfilePrakerja(
+        _baseUrlApiMember.value, _tokenPrakerja.value, body);
+    response.fold(
+      ///IF RESPONSE IS ERROR
+      (fail) {},
+
+      ///IF RESPONSE SUCCESS
+      (data) async {},
+    );
+  }
+
+  Future updateProfile(Map<String, dynamic> body) async {
+    final response = await _usecase.updateProfile(_tokenPrakerja.value, body);
+    response.fold(
+      ///IF RESPONSE IS ERROR
+      (fail) {
+        ExceptionHandle.execute(fail);
+        Get.back();
+      },
+
+      ///IF RESPONSE SUCCESS
+      (data) async {
+        await _pC.fetchProfile();
+        Get.back();
+        Get.back();
+        AppDialog.dialogStateWithLottie(
+            'success-animation.json', 'Profile berhasil diperbarui');
+        Future.delayed(
+          const Duration(seconds: 3),
+          () {
+            Get.back();
+          },
+        );
+      },
+    );
   }
 
   Future _setup() async {

@@ -1,9 +1,67 @@
+import 'package:ark_module_profile_prakerja/utils/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 
 import 'app_constanta.dart';
 
 class AppDialog {
+  static dialogStateWithLottie(
+    String lottiFile,
+    String txt,
+  ) {
+    return Get.defaultDialog(
+      radius: 8,
+      middleText: '',
+      title: '',
+      titleStyle: const TextStyle(fontSize: 0),
+      content: Column(
+        children: [
+          const SizedBox(height: 25),
+          Lottie.asset('assets/images/$lottiFile',
+              height: 100, width: 100, repeat: false),
+          const SizedBox(height: 35),
+          Text(
+            txt,
+            style: const TextStyle(
+              fontSize: 16,
+              height: 1.4,
+              color: kNewBlack1,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          )
+        ],
+      ),
+    );
+  }
+
+  static dialogLoading() {
+    return Get.defaultDialog(
+      barrierDismissible: false,
+      onWillPop: () async => false,
+      radius: 8,
+      middleText: '',
+      title: '',
+      titleStyle: const TextStyle(fontSize: 0),
+      content: Column(
+        children: [
+          const SizedBox(height: 25),
+          Lottie.asset('assets/images/loading-animation.json',
+              height: 100, width: 100),
+          const SizedBox(height: 35),
+          const Text(
+            'Harap Tunggu',
+            style: TextStyle(
+              fontSize: 16.5,
+              fontWeight: FontWeight.bold,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   static dialogDownloadSertif() {
     return Get.dialog(
       AlertDialog(
@@ -147,16 +205,12 @@ class AppDialog {
                               borderRadius: BorderRadius.circular(5)),
                           primary: const Color.fromRGBO(220, 221, 225, 1),
                         ),
-                        child: Text(
+                        child: const Text(
                           'YA',
                           style: TextStyle(
                             fontFamily: 'Montserrat',
-                            color: const Color.fromRGBO(28, 29, 32, 1),
-                            fontSize: Get.size.width < width320Pixel
-                                ? 10
-                                : Get.size.width < width360Pixel
-                                    ? 11.5
-                                    : 13,
+                            color: Color.fromRGBO(28, 29, 32, 1),
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -173,16 +227,12 @@ class AppDialog {
                               borderRadius: BorderRadius.circular(5)),
                           primary: const Color.fromRGBO(8, 114, 199, 1),
                         ),
-                        child: Text(
+                        child: const Text(
                           'TIDAK',
                           style: TextStyle(
                             fontFamily: 'Montserrat',
                             color: Colors.white,
-                            fontSize: Get.size.width < width320Pixel
-                                ? 10
-                                : Get.size.width < width360Pixel
-                                    ? 11.5
-                                    : 13,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

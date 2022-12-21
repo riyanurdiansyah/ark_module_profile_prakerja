@@ -25,7 +25,7 @@ class ArkEditProfilePrakerjaPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 20, right: 22),
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () => _epC.fnCheckStateUpdateProfile(),
                   child: const Text(
                     "Simpan",
                     style: TextStyle(

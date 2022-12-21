@@ -34,4 +34,10 @@ abstract class ArkProfileRepository {
   Future<Either<Failure, ProvinsiEntity>> getProvinsi();
 
   Future<Either<Failure, CityEntity>> getCity(int id);
+
+  Future<Either<Failure, bool>> updateProfilePrakerja(
+      String baseUrl, String token, Map<String, dynamic> body);
+
+  Future<Either<Failure, bool>> updateProfile(
+      String token, Map<String, dynamic> profile);
 }
