@@ -236,6 +236,7 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
     await dioInterceptor(dio, token);
     final response = await dio.put(updateProfileRegularUrl, data: body);
     int code = response.statusCode ?? 500;
+    log("UPDATE PROFILE : ${response.data}");
     if (code == 200) {
       return true;
     }

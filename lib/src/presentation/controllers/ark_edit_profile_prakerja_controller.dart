@@ -55,6 +55,9 @@ class ArkEditProfilePrakerjaController extends GetxController {
   final Rx<String> _profesi = ''.obs;
   Rx<String> get profesi => _profesi;
 
+  final Rx<String> _token = "".obs;
+  Rx<String> get token => _token;
+
   final Rx<String> _tokenPrakerja = "".obs;
   Rx<String> get tokenPrakerja => _tokenPrakerja;
 
@@ -178,8 +181,8 @@ class ArkEditProfilePrakerjaController extends GetxController {
               : _newProvinsi.value.nama,
           "pendidikan_terakhir": _txtPendidikan.value,
         };
-        updateProfilePrakerja(body);
-        await updateProfile(body);
+        updateProfile(body);
+        await updateProfilePrakerja(body);
       }
     }
   }
@@ -187,17 +190,6 @@ class ArkEditProfilePrakerjaController extends GetxController {
   Future updateProfilePrakerja(Map<String, dynamic> body) async {
     final response = await _usecase.updateProfilePrakerja(
         _baseUrlApiMember.value, _tokenPrakerja.value, body);
-    response.fold(
-      ///IF RESPONSE IS ERROR
-      (fail) {},
-
-      ///IF RESPONSE SUCCESS
-      (data) async {},
-    );
-  }
-
-  Future updateProfile(Map<String, dynamic> body) async {
-    final response = await _usecase.updateProfile(_tokenPrakerja.value, body);
     response.fold(
       ///IF RESPONSE IS ERROR
       (fail) {
@@ -222,12 +214,24 @@ class ArkEditProfilePrakerjaController extends GetxController {
     );
   }
 
+  Future updateProfile(Map<String, dynamic> body) async {
+    final response = await _usecase.updateProfile(_token.value, body);
+    response.fold(
+      ///IF RESPONSE IS ERROR
+      (fail) {},
+
+      ///IF RESPONSE SUCCESS
+      (data) async {},
+    );
+  }
+
   Future _setup() async {
     _dataSource = ArkProfileRemoteDataSourceImpl();
     _repository = ArkProfileRepositoryImpl(_dataSource);
     _usecase = ArkProfileUseCase(_repository);
 
     _pref = await SharedPreferences.getInstance();
+    _token.value = _pref.getString("token_access") ?? "";
     _tokenPrakerja.value = _pref.getString("token_access_prakerja") ?? "";
     _avatar.value = _pref.getString('user_avatar') ?? '';
     _email.value = _pref.getString('user_email') ?? '';
