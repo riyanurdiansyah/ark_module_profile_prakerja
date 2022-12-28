@@ -215,10 +215,8 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   Future<bool> updateProfilePrakerja(
       String baseUrl, String token, Map<String, dynamic> body) async {
     await dioInterceptor(dio, token);
-    final response = await dio.put(
-      "$baseUrl/api/v1/prakerja/auth/update/profile",
-      data: body,
-    );
+    final response = await dio
+        .put("$baseUrl/api/v1/prakerja/auth/update/profile", data: body);
     log("RESPONSE UPDATE PROFILE PRAKERJA : ${response.data}");
     int code = response.statusCode ?? 500;
     if (code == 200) {
@@ -234,9 +232,12 @@ class ArkProfileRemoteDataSourceImpl implements ArkProfileRemoteDataSource {
   @override
   Future<bool> updateProfile(String token, Map<String, dynamic> body) async {
     await dioInterceptor(dio, token);
-    final response = await dio.put(updateProfileRegularUrl, data: body);
+    final response = await dio.put(
+        "https://api-member.arkademi.com/api/v1/auth/update/profile",
+        data: body);
     int code = response.statusCode ?? 500;
     log("UPDATE PROFILE : ${response.data}");
+    log("UPDATE PROFILE 100 : $token");
     if (code == 200) {
       return true;
     }

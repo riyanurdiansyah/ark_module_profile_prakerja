@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:ark_module_profile_prakerja/ark_module_profile_prakerja.dart';
+import 'package:ark_module_profile_prakerja/src/core/interceptor.dart';
 import 'package:ark_module_profile_prakerja/utils/app_empty_entity.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -215,14 +219,25 @@ class ArkEditProfilePrakerjaController extends GetxController {
   }
 
   Future updateProfile(Map<String, dynamic> body) async {
-    final response = await _usecase.updateProfile(_token.value, body);
-    response.fold(
-      ///IF RESPONSE IS ERROR
-      (fail) {},
+    var dio = Dio();
+    await dioInterceptor(dio, _token.value);
+    final response = await dio.put(
+        "https://api-member.arkademi.com/api/v1/auth/update/profile",
+        data: body);
+    int code = response.statusCode ?? 500;
+    log("UPDATE PROFILE : ${response.data}");
+    log("UPDATE PROFILE 99 : ${_token.value}");
+    if (code == 200) {
+      return true;
+    }
+    // final response = await _usecase.updateProfile(_token.value, body);
+    // response.fold(
+    //   ///IF RESPONSE IS ERROR
+    //   (fail) {},
 
-      ///IF RESPONSE SUCCESS
-      (data) async {},
-    );
+    //   ///IF RESPONSE SUCCESS
+    //   (data) async {},
+    // );
   }
 
   Future _setup() async {
